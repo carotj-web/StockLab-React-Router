@@ -1,0 +1,11 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router';
+import ProductoCard from '../components/ProductoCard';
+export default function Inventario({ productos, cambiarStock, eliminar }) {
+  const [busqueda, setBusqueda] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [orden, setOrden] = useState('nombre');
+  const [bajo, setBajo] = useState(false);
+  const visibles = productos.filter(p => p.nombre.toLocaleLowerCase().includes(busqueda.trim().toLocaleLowerCase()) && (!categoria || p.categoria === categoria) && (!bajo || p.stock <= 5)).sort((a, b) => orden === 'nombre' ? a.nombre.localeCompare(b.nombre) : orden === 'precio' ? a.precio - b.precio : a.stock - b.stock);
+  return <><div className="titulo fila"><div><p className="eyebrow">CATÁLOGO</p><h1>Inventario</h1><p className="muted">Administra los productos de tu tienda.</p></div><Link className="boton" to="/nuevo">+ Nuevo producto</Link></div><section className="panel filtros" aria-label="Filtros"><label>Buscar producto<input type="search" placeholder="Ej. teclado" value={busqueda} onChange={e => setBusqueda(e.target.value)} /></label><label>Categoría<select value={categoria} onChange={e => setCategoria(e.target.value)}><option value="">Todas</option>{[...new Set(productos.map(p => p.categoria))].sort().map(c => <option key={c}>{c}</option>)}</select></label><label>Ordenar por<select value={orden} onChange={e => setOrden(e.target.value)}><option value="nombre">Nombre A–Z</option><option value="precio">Menor precio</option><option value="stock">Menor stock</option></select></label><label className="check"><input type="checkbox" checked={bajo} onChange={e => setBajo(e.target.checked)} />Solo stock bajo</label></section><p className="muted">{visibles.length} de {productos.length} productos</p><section className="cuadricula">{visibles.map(p => <ProductoCard key={p.id} producto={p} cambiarStock={cambiarStock} eliminar={eliminar} />)}</section>{!visibles.length && <div className="panel"><h2>No hay productos para mostrar</h2><p>Prueba otros filtros o agrega tu primer producto.</p><button className="secundario" onClick={() => { setBusqueda(''); setCategoria(''); setBajo(false); }}>Limpiar filtros</button></div>}</>;
+}
