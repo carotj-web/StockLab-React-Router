@@ -4,4 +4,10 @@ import { BrowserRouter } from 'react-router';
 import App from './App';
 import './styles.css';
 
-createRoot(document.getElementById('root')).render(<React.StrictMode><BrowserRouter><App /></BrowserRouter></React.StrictMode>);
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter basename="/StockLab-React-Router">
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);
